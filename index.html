@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TORRA — Cardápio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== CABEÇALHO ===== -->
+  <header class="hero">
+    <div class="hero__top">
+      <div class="brand">
+        <svg class="brand__cup" viewBox="0 0 64 64" aria-hidden="true">
+          <path class="steam" d="M22 4c0 4-4 4-4 8s4 4 4 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path class="steam steam--2" d="M32 4c0 4-4 4-4 8s4 4 4 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path class="steam steam--3" d="M42 4c0 4-4 4-4 8s4 4 4 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M12 26h34l-3 24a6 6 0 0 1-6 5H21a6 6 0 0 1-6-5l-3-24Z" fill="currentColor" opacity="0.15"/>
+          <path d="M12 26h34l-3 24a6 6 0 0 1-6 5H21a6 6 0 0 1-6-5l-3-24Z" fill="none" stroke="currentColor" stroke-width="2.5"/>
+          <path d="M46 30h4a6 6 0 0 1 0 12h-3" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        </svg>
+        <div>
+          <p class="brand__eyebrow">Cafeteria de especialidade</p>
+          <h1 class="brand__name">TORRA</h1>
+        </div>
+      </div>
+      <div class="status" id="status">
+        <span class="status__dot" id="statusDot"></span>
+        <span id="statusText">verificando horário…</span>
+      </div>
+    </div>
+    <p class="hero__tagline">Cada grão carrega uma origem, uma altitude, uma história de torra.</p>
+  </header>
+
+  <!-- ===== FILTROS ===== -->
+  <nav class="filters" aria-label="Filtros do cardápio">
+    <div class="filters__row" id="categoryTabs">
+      <button class="chip chip--tab is-active" data-category="todos">Todos</button>
+      <button class="chip chip--tab" data-category="espresso">Cafés Especiais</button>
+      <button class="chip chip--tab" data-category="filtrados">Filtrados</button>
+      <button class="chip chip--tab" data-category="gelados">Gelados</button>
+      <button class="chip chip--tab" data-category="doces">Doces &amp; Salgados</button>
+      <button class="chip chip--tab" data-category="chas">Chás &amp; Outros</button>
+    </div>
+    <div class="filters__row filters__row--tags" id="dietTags">
+      <button class="chip chip--diet is-active" data-diet="todos">Sem restrição</button>
+      <button class="chip chip--diet" data-diet="vegano">🌱 Vegano</button>
+      <button class="chip chip--diet" data-diet="sem-lactose">Sem lactose</button>
+      <button class="chip chip--diet" data-diet="gelado">Gelado</button>
+      <button class="chip chip--diet" data-diet="mais-pedido">★ Mais pedidos</button>
+    </div>
+  </nav>
+
+  <!-- ===== CARDÁPIO ===== -->
+  <main id="menu"></main>
+
+  <!-- ===== RODAPÉ ===== -->
+  <footer class="footer">
+    <div class="footer__col">
+      <h3>Horário</h3>
+      <p>Seg – Sex · 7h às 19h</p>
+      <p>Sáb · 8h às 19h</p>
+      <p>Dom · 8h às 14h</p>
+    </div>
+    <div class="footer__col">
+      <h3>Wi-Fi</h3>
+      <p>Rede: torra-cafe</p>
+      <p>Senha: graos2026</p>
+    </div>
+    <div class="footer__col">
+      <h3>Fale conosco</h3>
+      <p>@torra.cafeteria</p>
+      <p>Peça no balcão ou pelo QR da mesa</p>
+    </div>
+  </footer>
+
+  <!-- ===== BOTÃO FLUTUANTE DA COMANDA ===== -->
+  <button class="cart-fab" id="cartFab" aria-haspopup="true" aria-expanded="false">
+    <span class="cart-fab__icon">🧾</span>
+    <span class="cart-fab__label">Comanda</span>
+    <span class="cart-fab__count" id="cartCount">0</span>
+  </button>
+
+  <!-- ===== PAINEL DA COMANDA ===== -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <section class="cart-panel" id="cartPanel" aria-label="Sua comanda">
+    <header class="cart-panel__head">
+      <div>
+        <p class="cart-panel__eyebrow">Comanda</p>
+        <h2>Meu pedido</h2>
+      </div>
+      <button class="cart-panel__close" id="cartClose" aria-label="Fechar comanda">✕</button>
+    </header>
+
+    <div class="cart-panel__items" id="cartItems">
+      <p class="cart-panel__empty" id="cartEmpty">Sua comanda está vazia.<br>Toque em "Adicionar" em qualquer item do cardápio.</p>
+    </div>
+
+    <footer class="cart-panel__foot">
+      <div class="cart-panel__total">
+        <span>Subtotal</span>
+        <span id="cartTotal">R$ 0,00</span>
+      </div>
+      <div class="cart-panel__actions">
+        <button class="btn btn--ghost" id="cartClear">Limpar</button>
+        <button class="btn btn--primary" id="cartCall">Chamar garçom</button>
+      </div>
+    </footer>
+  </section>
+
+  <div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
