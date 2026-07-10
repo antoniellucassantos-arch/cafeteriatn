@@ -50,6 +50,7 @@ const TAG_LABELS = {
 // ===========================================================
 let activeCategory = 'todos';
 let activeDiet = 'todos';
+let searchTerm = '';
 const cart = {}; // { itemId: quantidade }
 
 // ===========================================================
@@ -62,10 +63,14 @@ function formatPrice(value) {
 }
 
 function getFilteredItems() {
+  const term = searchTerm.trim().toLowerCase();
   return MENU.filter(item => {
     const matchesCategory = activeCategory === 'todos' || item.category === activeCategory;
     const matchesDiet = activeDiet === 'todos' || item.tags.includes(activeDiet);
-    return matchesCategory && matchesDiet;
+    const matchesSearch = term === '' ||
+      item.name.toLowerCase().includes(term) ||
+      item.notes.toLowerCase().includes(term);
+    return matchesCategory && matchesDiet && matchesSearch;
   });
 }
 
@@ -129,6 +134,15 @@ document.getElementById('categoryTabs').addEventListener('click', e => {
   activeCategory = btn.dataset.category;
   document.querySelectorAll('.chip--tab').forEach(c => c.classList.toggle('is-active', c === btn));
   renderMenu();
+});
+
+let searchDebounce = null;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(() => {
+    searchTerm = e.target.value;
+    renderMenu();
+  }, 150);
 });
 
 document.getElementById('dietTags').addEventListener('click', e => {
@@ -234,6 +248,30 @@ cartFab.addEventListener('click', () => {
 document.getElementById('cartClose').addEventListener('click', closeCart);
 cartOverlay.addEventListener('click', closeCart);
 document.getElementById('cartClear').addEventListener('click', clearCart);
+document.getElementById('cartWhatsapp').addEventListener('click', () => {
+  const ids = Object.keys(cart);
+  if (ids.length === 0) {
+    showToast('Adicione itens à comanda antes de enviar');
+    return;
+  }
+  let total = 0;
+  const lines = ids.map(id => {
+    const item = MENU.find(i => i.id === Number(id));
+    const qty = cart[id];
+    const lineTotal = item.price * qty;
+    total += lineTotal;
+    return `${qty}x ${item.name} — ${formatPrice(lineTotal)}`;
+  });
+  const message = [
+    '🧾 Meu pedido na TORRA:',
+    ...lines,
+    '',
+    `Total: ${formatPrice(total)}`,
+  ].join('\n');
+  const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+});
+
 document.getElementById('cartCall').addEventListener('click', () => {
   if (Object.keys(cart).length === 0) {
     showToast('Adicione itens à comanda antes de chamar o garçom');
@@ -276,6 +314,52 @@ function updateOpenStatus() {
   statusEl.classList.toggle('is-closed', !isOpen);
   statusText.textContent = isOpen ? 'Aberto agora' : 'Fechado no momento';
 }
+
+// ===========================================================
+// Aparência: modo claro/escuro e paleta de cores
+// ===========================================================
+const themeBtn = document.getElementById('themeBtn');
+const themePanel = document.getElementById('themePanel');
+const root = document.documentElement;
+
+function toggleThemePanel() {
+  const isOpen = themePanel.classList.toggle('is-open');
+  themeBtn.classList.toggle('is-open', isOpen);
+  themeBtn.setAttribute('aria-expanded', String(isOpen));
+}
+
+themeBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  toggleThemePanel();
+});
+
+document.addEventListener('click', e => {
+  if (!themePanel.contains(e.target) && e.target !== themeBtn) {
+    themePanel.classList.remove('is-open');
+    themeBtn.classList.remove('is-open');
+    themeBtn.setAttribute('aria-expanded', 'false');
+  }
+});
+
+document.getElementById('modeRow').addEventListener('click', e => {
+  const btn = e.target.closest('.mode-btn');
+  if (!btn) return;
+  const mode = btn.dataset.mode;
+  root.setAttribute('data-theme', mode === 'light' ? 'light' : 'dark');
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('is-active', b === btn));
+});
+
+document.getElementById('accentRow').addEventListener('click', e => {
+  const btn = e.target.closest('.swatch');
+  if (!btn) return;
+  const accent = btn.dataset.accent;
+  if (accent === 'cobre') {
+    root.removeAttribute('data-accent');
+  } else {
+    root.setAttribute('data-accent', accent);
+  }
+  document.querySelectorAll('.swatch').forEach(b => b.classList.toggle('is-active', b === btn));
+});
 
 // ===========================================================
 // Inicialização

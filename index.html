@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TORRA — Cardápio</title>
+<title> Antoniel — Cardápio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -28,9 +28,28 @@
           <h1 class="brand__name">TORRA</h1>
         </div>
       </div>
-      <div class="status" id="status">
-        <span class="status__dot" id="statusDot"></span>
-        <span id="statusText">verificando horário…</span>
+      <div class="hero__controls">
+        <div class="status" id="status">
+          <span class="status__dot" id="statusDot"></span>
+          <span id="statusText">verificando horário…</span>
+        </div>
+        <div class="theme-switch">
+          <button class="theme-switch__btn" id="themeBtn" aria-haspopup="true" aria-expanded="false" aria-label="Personalizar aparência">⚙</button>
+          <div class="theme-panel" id="themePanel">
+            <p class="theme-panel__label">Modo</p>
+            <div class="theme-panel__row" id="modeRow">
+              <button class="mode-btn is-active" data-mode="dark">🌙 Escuro</button>
+              <button class="mode-btn" data-mode="light">☀️ Claro</button>
+            </div>
+            <p class="theme-panel__label">Paleta</p>
+            <div class="theme-panel__row" id="accentRow">
+              <button class="swatch is-active" data-accent="cobre" style="--sw:#c17f4a" aria-label="Cobre" title="Cobre"></button>
+              <button class="swatch" data-accent="terracota" style="--sw:#b5563a" aria-label="Terracota" title="Terracota"></button>
+              <button class="swatch" data-accent="salvia" style="--sw:#7f9467" aria-label="Sálvia" title="Sálvia"></button>
+              <button class="swatch" data-accent="vinho" style="--sw:#8c3b4f" aria-label="Vinho" title="Vinho"></button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <p class="hero__tagline">Cada grão carrega uma origem, uma altitude, uma história de torra.</p>
@@ -38,6 +57,9 @@
 
   <!-- ===== FILTROS ===== -->
   <nav class="filters" aria-label="Filtros do cardápio">
+    <div class="filters__search">
+      <input type="search" id="searchInput" placeholder="Buscar item no cardápio…" aria-label="Buscar item no cardápio">
+    </div>
     <div class="filters__row" id="categoryTabs">
       <button class="chip chip--tab is-active" data-category="todos">Todos</button>
       <button class="chip chip--tab" data-category="espresso">Cafés Especiais</button>
@@ -107,6 +129,7 @@
       </div>
       <div class="cart-panel__actions">
         <button class="btn btn--ghost" id="cartClear">Limpar</button>
+        <button class="btn btn--whatsapp" id="cartWhatsapp">Enviar no WhatsApp</button>
         <button class="btn btn--primary" id="cartCall">Chamar garçom</button>
       </div>
     </footer>
